@@ -8,9 +8,4 @@ func main() {
 
 	handlers.ReadFromCSV()
 	handlers.WriteToJSON()
-
-	//Validation and changes
-
-	//
-
 }

@@ -12,7 +12,7 @@ import (
 
 func ReadFromCSV() {
 
-	csvFile, err := os.Open("./data/users.csv")
+	csvFile, err := os.Open("./data/usersList.csv")
 	if err != nil {
 		fmt.Println("Opening file error", err)
 		return
@@ -28,12 +28,18 @@ func ReadFromCSV() {
 
 	for _, lines := range csvLines {
 		user := &data.User{
-			Name:        lines[0],
-			Email:       lines[1],
-			PhoneNumber: lines[2],
-			IsActive:    lines[3],
+			UUID:        lines[0],
+			Name:        lines[1],
+			Email:       lines[2],
+			PhoneNumber: lines[3],
+			IsActive:    lines[4],
 		}
-		data.AddUser(user)
+		err := user.IsValid()
+		if err != nil {
+			fmt.Println("The user details are invalid", err)
+		} else {
+			data.AddUser(user)
+		}
 	}
 
 }
@@ -50,6 +56,6 @@ func WriteToJSON() {
 
 	if err != nil {
 		fmt.Println("Error writing to json file", err)
+		return
 	}
-	fmt.Println("Contents of file in JSON:", string(data_json))
 }

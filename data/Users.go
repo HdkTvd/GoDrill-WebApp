@@ -1,6 +1,10 @@
 package data
 
-import uuid "github.com/satori/go.uuid"
+import (
+	"fmt"
+
+	uuid "github.com/satori/go.uuid"
+)
 
 type UUID interface{}
 
@@ -20,12 +24,46 @@ func GetUserList() Users {
 	return userList
 }
 
+func GetUserNames() []string {
+	var names []string
+
+	for _, u := range userList {
+		names = append(names, u.Name)
+	}
+
+	return names
+}
+
 func AddUser(u *User) {
-	u.UUID = getNextID()
 	userList = append(userList, u)
 }
 
-func getNextID() UUID {
-	uid := uuid.NewV4()
-	return uid
+func getNewID() UUID {
+	id := uuid.NewV4()
+	return id
+}
+
+func (u *User) IsValid() error {
+
+	var ErrNameNotFound = fmt.Errorf("Name is required")
+	var ErrEmailNotFound = fmt.Errorf("Email is required")
+	var ErrInvalidPhoneNumber = fmt.Errorf("Invalid Phone Number")
+
+	if u.UUID == "" {
+		u.UUID = getNewID()
+	}
+
+	if u.Name == "" {
+		return ErrNameNotFound
+	}
+
+	if u.Email == "" {
+		return ErrEmailNotFound
+	}
+
+	if len(u.PhoneNumber) != 10 {
+		return ErrInvalidPhoneNumber
+	}
+
+	return nil
 }
