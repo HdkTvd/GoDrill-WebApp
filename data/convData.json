@@ -1,0 +1,37 @@
+[
+    {
+        "uuid": "﻿7523206f-4220-4c7c-ab0a-edbc3c293ca5",
+        "name": "xyz",
+        "email": "xyz@gmail.com",
+        "phone_number": 8079588600,
+        "isActive": true
+    },
+    {
+        "uuid": "0f86afc2-ea77-41b1-8390-fea5290e6cd6",
+        "name": "abc",
+        "email": "abc@yahoo.com",
+        "phone_number": 7287925697,
+        "isActive": false
+    },
+    {
+        "uuid": "5884da1a-e33a-4887-8766-abe4f969e7ba",
+        "name": "hardik",
+        "email": "hardik@rediffmail.com",
+        "phone_number": 6127945307,
+        "isActive": true
+    },
+    {
+        "uuid": "09ecbe85-e3b6-4cb4-b944-3de8e9786fc8",
+        "name": "lol",
+        "email": "slkfj@sfsdf.in",
+        "phone_number": 8919198659,
+        "isActive": false
+    },
+    {
+        "uuid": "199fe183-c27b-402b-9f54-4f8ebd523860",
+        "name": "Jon",
+        "email": "johndoe@hello.xyz",
+        "phone_number": 6419477113,
+        "isActive": true
+    }
+]
