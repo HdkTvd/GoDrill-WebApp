@@ -1,1 +1,37 @@
-[{"uuid":"﻿7523206f-4220-4c7c-ab0a-edbc3c293ca5","name":"xyz","email":"xyz@gmail.com","phone_number":"8079588600","isActive":"true"},{"uuid":"8bf541d4-1106-46d7-9681-8a59861713f5","name":"abc","email":"abc@yahoo.com","phone_number":"7287925697","isActive":"false"},{"uuid":"5884da1a-e33a-4887-8766-abe4f969e7ba","name":"hardik","email":"hardik@rediffmail.com","phone_number":"6127945307","isActive":"true"},{"uuid":"0de4c1ea-6db0-43ba-a0b6-260c0ff30eec","name":"Jon","email":"johndoe@hello.xyz","phone_number":"6419477113","isActive":"true"}]
+[
+    {
+        "uuid": "﻿7523206f-4220-4c7c-ab0a-edbc3c293ca5",
+        "name": "xyz",
+        "email": "xyz@gmail.com",
+        "phone_number": 8079588600,
+        "isActive": true
+    },
+    {
+        "uuid": "fc158456-4cbf-4125-955c-c34b2ab8c790",
+        "name": "abc",
+        "email": "abc@yahoo.com",
+        "phone_number": 7287925697,
+        "isActive": false
+    },
+    {
+        "uuid": "5884da1a-e33a-4887-8766-abe4f969e7ba",
+        "name": "hardik",
+        "email": "hardik@rediffmail.com",
+        "phone_number": 6127945307,
+        "isActive": true
+    },
+    {
+        "uuid": "32e2375b-4754-4d63-a9d7-216f13058f41",
+        "name": "lol",
+        "email": "slkfj@sfsdf.in",
+        "phone_number": 8919198659,
+        "isActive": false
+    },
+    {
+        "uuid": "1e2062ba-c732-465e-ba7e-517719799de7",
+        "name": "Jon",
+        "email": "johndoe@hello.xyz",
+        "phone_number": 6419477113,
+        "isActive": true
+    }
+]

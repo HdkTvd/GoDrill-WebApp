@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strconv"
 
 	"github.com/godrill1/data"
 )
@@ -27,16 +28,18 @@ func ReadFromCSV() {
 	defer csvFile.Close()
 
 	for _, lines := range csvLines {
+		phNo, _ := strconv.Atoi(lines[3])
+		isAct, _ := strconv.ParseBool(lines[4])
 		user := &data.User{
 			UUID:        lines[0],
 			Name:        lines[1],
 			Email:       lines[2],
-			PhoneNumber: lines[3],
-			IsActive:    lines[4],
+			PhoneNumber: phNo,
+			IsActive:    isAct,
 		}
 		err := user.IsValid()
 		if err != nil {
-			fmt.Println("The user details are invalid", err)
+			fmt.Println("The user details are invalid:", err)
 		} else {
 			data.AddUser(user)
 		}

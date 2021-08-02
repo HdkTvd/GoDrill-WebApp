@@ -2,6 +2,7 @@ package data
 
 import (
 	"fmt"
+	"strconv"
 
 	uuid "github.com/satori/go.uuid"
 )
@@ -12,8 +13,8 @@ type User struct {
 	UUID        UUID   `json:"uuid"`
 	Name        string `json:"name"`
 	Email       string `json:"email"`
-	PhoneNumber string `json:"phone_number"`
-	IsActive    string `json:"isActive"`
+	PhoneNumber int    `json:"phone_number"`
+	IsActive    bool   `json:"isActive"`
 }
 
 var userList []*User
@@ -61,7 +62,7 @@ func (u *User) IsValid() error {
 		return ErrEmailNotFound
 	}
 
-	if len(u.PhoneNumber) != 10 {
+	if len(strconv.Itoa(u.PhoneNumber)) != 10 {
 		return ErrInvalidPhoneNumber
 	}
 
