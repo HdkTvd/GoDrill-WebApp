@@ -2,26 +2,24 @@ package handlers
 
 import (
 	"encoding/csv"
-	"fmt"
 	"os"
 	"strconv"
 
 	uuid "github.com/satori/go.uuid"
+	"github.com/sirupsen/logrus"
 )
 
-func ReadCsv(filePath string) {
+func ReadCsv(filePath string, l *logrus.Logger) {
 
 	csvFile, err := os.Open(filePath)
 	if err != nil {
-		fmt.Println("Opening file error", err)
-		return
+		l.Error("Cannot open file.")
 	}
 	defer csvFile.Close()
 
 	csvLines, err := csv.NewReader(csvFile).ReadAll()
 	if err != nil {
-		fmt.Println("Error reading csv file", err)
-		return
+		l.Error("Unable to read file.")
 	}
 
 	for _, lines := range csvLines {
@@ -39,7 +37,7 @@ func ReadCsv(filePath string) {
 
 		err := user.IsValid()
 		if err != nil {
-			fmt.Println("The user details are invalid:", err)
+			l.Error(err)
 		} else {
 			AddUser(user)
 		}

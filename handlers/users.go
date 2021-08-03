@@ -23,7 +23,6 @@ func GetUserMap() map[string]User {
 
 func AddUser(u *User) {
 	userMap[u.UUID.String()] = *u
-	fmt.Println(*u)
 }
 
 func (u *User) IsValid() error {

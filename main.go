@@ -1,46 +1,34 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/godrill1/handlers"
+	"github.com/sirupsen/logrus"
 )
-
-func getUser(rw http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		userList := handlers.GetUserMap()
-		e := json.NewEncoder(rw)
-		err := e.Encode(userList)
-		if err != nil {
-			http.Error(rw, "Unable to convert to json", http.StatusInternalServerError)
-			return
-		}
-		// fmt.Fprint(rw, string(data))
-	}
-
-	if r.Method == http.MethodPost {
-		data, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			http.Error(rw, "No Data found", http.StatusBadRequest)
-			return
-		}
-		handlers.ReadCsv(string(data))
-	}
-}
 
 func main() {
 
-	// handlers.WriteFromCSVToStruct()
-	// handlers.WriteFromStructToJSON()
+	//create logger
+	l := logrus.New()
+	l.SetOutput(os.Stdout)
 
-	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(rw, "Welcome!")
-	})
-	http.HandleFunc("/users", getUser)
+	//create handler
+	uh := handlers.NewUserHandler(l)
 
-	http.ListenAndServe(":9090", nil)
+	//create a new server mux and register the handlers
+	sm := http.NewServeMux()
+	sm.Handle("/users", uh)
 
+	s := &http.Server{
+		Addr:         ":9090",
+		Handler:      sm,
+		ReadTimeout:  5 * time.Second,
+		IdleTimeout:  120 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	l.Fatal(s.ListenAndServe())
 }
