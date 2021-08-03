@@ -18,11 +18,12 @@ func main() {
 	l.SetOutput(os.Stdout)
 
 	//create database connection
-	dsn := "user:pass@tcp(127.0.0.1:3306)/dbase?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "user:password@tcp(127.0.0.1:3306)/dbase?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		l.Fatal("Error connecting database.")
 	}
+	db.AutoMigrate(&handlers.User{})
 
 	//create handler
 	uh := handlers.NewUserHandler(l, db)

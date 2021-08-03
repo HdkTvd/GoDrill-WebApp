@@ -25,35 +25,35 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 
 	for _, lines := range csvLines {
 
-		phNo, err := strconv.Atoi(lines[3])
-		if err != nil {
-			l.Error("Unable to convert String type to Int type: ", err)
-			continue
-		}
+		phNo, _ := strconv.Atoi(lines[3])
+		// if err != nil {
+		// 	l.Error("Unable to convert String type to Int type: ", err)
+		// 	continue
+		// }
 
-		isAct, err := strconv.ParseBool(lines[4])
-		if err != nil {
-			l.Error("Unable to Parse bool: ", err)
-			continue
-		}
+		isAct, _ := strconv.ParseBool(lines[4])
+		// if err != nil {
+		// 	l.Error("Unable to Parse bool: ", err)
+		// 	continue
+		// }
 
-		uuid, err := uuid.FromString(lines[0])
-		if err != nil {
-			l.Error("Unable to convert UUID from string type: ", err)
-			continue
-		}
+		uid, _ := uuid.FromString(lines[0])
+		// if err != nil {
+		// 	l.Error("Unable to convert UUID from string type: ", err)
+		// 	continue
+		// }
 
 		user := &User{
-			UUID:        uuid,
+			UUID:        uid,
 			Name:        lines[1],
 			Email:       lines[2],
 			PhoneNumber: phNo,
 			IsActive:    isAct,
 		}
 
-		err = user.IsValid()
+		err := user.IsValid()
 		if err != nil {
-			l.Error(err)
+			l.Error("User details invalid:", err)
 		} else {
 			res, err := AddUser(user, db)
 			if err != nil {
@@ -61,8 +61,8 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 			} else {
 				l.Info("Rows Affected:", res)
 			}
-
 		}
+
 	}
 
 }

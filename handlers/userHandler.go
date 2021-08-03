@@ -20,7 +20,9 @@ func NewUserHandler(l *logrus.Logger, db *gorm.DB) *UserHandler {
 
 func (uh *UserHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		userList := GetUsers(uh.db)
+
+		uh.db.Find(&userList)
+
 		e := json.NewEncoder(rw)
 		err := e.Encode(userList)
 		if err != nil {
@@ -35,6 +37,5 @@ func (uh *UserHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			uh.l.Error("Unable to convert to json")
 		}
 		ReadCsv(string(data), uh.l, uh.db)
-		// uh.l.Info("Some user details were added!")
 	}
 }

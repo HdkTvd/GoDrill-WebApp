@@ -10,20 +10,19 @@ import (
 
 type User struct {
 	UUID        uuid.UUID `json:"uuid" gorm:"primary_key"`
-	Name        string    `json:"name" gorm:"not null"`
-	Email       string    `json:"email" gorm:"not null"`
-	PhoneNumber int       `json:"phone_number" gorm:"size:10"`
-	IsActive    bool      `json:"isActive" gorm:"default:false"`
+	Name        string    `json:"name"`
+	Email       string    `json:"email"`
+	PhoneNumber int       `json:"phone_number"`
+	IsActive    bool      `json:"isActive"`
 }
 
 var userMap = make(map[uuid.UUID]User)
-
-func GetUsers(db *gorm.DB) *gorm.DB {
-	result := db.Find(&User{})
-	return result
-}
+var userList []User
 
 func AddUser(u *User, db *gorm.DB) (int64, error) {
+	// if u.UUID == uuid.Nil {
+	// 	u.UUID = uuid.NewV4()
+	// }
 	userMap[u.UUID] = *u
 	result := db.Create(*u)
 	if result.Error != nil {
