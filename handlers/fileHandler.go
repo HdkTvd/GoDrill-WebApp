@@ -26,19 +26,19 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 	for _, lines := range csvLines {
 
 		phNo, _ := strconv.Atoi(lines[3])
-		// if err != nil {
+		// if errPh != nil {
 		// 	l.Error("Unable to convert String type to Int type: ", err)
 		// 	continue
 		// }
 
 		isAct, _ := strconv.ParseBool(lines[4])
-		// if err != nil {
+		// if errAct != nil {
 		// 	l.Error("Unable to Parse bool: ", err)
 		// 	continue
 		// }
 
 		uid, _ := uuid.FromString(lines[0])
-		// if err != nil {
+		// if errId != nil {
 		// 	l.Error("Unable to convert UUID from string type: ", err)
 		// 	continue
 		// }

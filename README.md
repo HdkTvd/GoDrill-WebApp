@@ -15,3 +15,8 @@ Install Dependencies -
 
 In your project directory run command -
 `go run main.go`
+
+To Test the project you can use POSTMAN 
+or 
+curl with GET/POST request
+at localhost:9090/users
