@@ -23,9 +23,21 @@ func ReadCsv(filePath string, l *logrus.Logger) {
 	}
 
 	for _, lines := range csvLines {
-		phNo, _ := strconv.Atoi(lines[3])
-		isAct, _ := strconv.ParseBool(lines[4])
-		uuid, _ := uuid.FromString(lines[0])
+
+		phNo, err := strconv.Atoi(lines[3])
+		if err != nil {
+			l.Error(err)
+		}
+
+		isAct, err := strconv.ParseBool(lines[4])
+		if err != nil {
+			l.Error(err)
+		}
+
+		uuid, err := uuid.FromString(lines[0])
+		if err != nil {
+			l.Error(err)
+		}
 
 		user := &User{
 			UUID:        uuid,
@@ -35,7 +47,7 @@ func ReadCsv(filePath string, l *logrus.Logger) {
 			IsActive:    isAct,
 		}
 
-		err := user.IsValid()
+		err = user.IsValid()
 		if err != nil {
 			l.Error(err)
 		} else {
