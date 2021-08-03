@@ -5,24 +5,31 @@ import (
 	"strconv"
 
 	uuid "github.com/satori/go.uuid"
+	"gorm.io/gorm"
 )
 
 type User struct {
-	UUID        uuid.UUID `json:"uuid"`
-	Name        string    `json:"name"`
-	Email       string    `json:"email"`
-	PhoneNumber int       `json:"phone_number"`
-	IsActive    bool      `json:"isActive"`
+	UUID        uuid.UUID `json:"uuid" gorm:"primary_key"`
+	Name        string    `json:"name" gorm:"not null"`
+	Email       string    `json:"email" gorm:"not null"`
+	PhoneNumber int       `json:"phone_number" gorm:"size:10"`
+	IsActive    bool      `json:"isActive" gorm:"default:false"`
 }
 
-var userMap = make(map[string]User)
+var userMap = make(map[uuid.UUID]User)
 
-func GetUserMap() map[string]User {
-	return userMap
+func GetUsers(db *gorm.DB) *gorm.DB {
+	result := db.Find(&User{})
+	return result
 }
 
-func AddUser(u *User) {
-	userMap[u.UUID.String()] = *u
+func AddUser(u *User, db *gorm.DB) (int64, error) {
+	userMap[u.UUID] = *u
+	result := db.Create(*u)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+	return result.RowsAffected, nil
 }
 
 func (u *User) IsValid() error {
@@ -44,7 +51,7 @@ func (u *User) IsValid() error {
 		return ErrEmailNotFound
 	}
 
-	if _, isDuplicate := userMap[u.UUID.String()]; isDuplicate {
+	if _, isDuplicate := userMap[u.UUID]; isDuplicate {
 		return ErrDuplicateUUID
 	}
 

@@ -7,9 +7,10 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
-func ReadCsv(filePath string, l *logrus.Logger) {
+func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 
 	csvFile, err := os.Open(filePath)
 	if err != nil {
@@ -26,17 +27,20 @@ func ReadCsv(filePath string, l *logrus.Logger) {
 
 		phNo, err := strconv.Atoi(lines[3])
 		if err != nil {
-			l.Error(err)
+			l.Error("Unable to convert String type to Int type: ", err)
+			continue
 		}
 
 		isAct, err := strconv.ParseBool(lines[4])
 		if err != nil {
-			l.Error(err)
+			l.Error("Unable to Parse bool: ", err)
+			continue
 		}
 
 		uuid, err := uuid.FromString(lines[0])
 		if err != nil {
-			l.Error(err)
+			l.Error("Unable to convert UUID from string type: ", err)
+			continue
 		}
 
 		user := &User{
@@ -51,25 +55,14 @@ func ReadCsv(filePath string, l *logrus.Logger) {
 		if err != nil {
 			l.Error(err)
 		} else {
-			AddUser(user)
+			res, err := AddUser(user, db)
+			if err != nil {
+				l.Error(err)
+			} else {
+				l.Info("Rows Affected:", res)
+			}
+
 		}
 	}
 
 }
-
-// func WriteFromStructToJSON() {
-
-// 	userList := GetUserMap()
-
-// 	data_json, err := json.Marshal(userList)
-// 	if err != nil {
-// 		fmt.Println("Error Marshaling csv data to json", err)
-// 		return
-// 	}
-
-// 	err = ioutil.WriteFile("data/convData.json", data_json, 0644)
-// 	if err != nil {
-// 		fmt.Println("Error writing to json file", err)
-// 		return
-// 	}
-// }
