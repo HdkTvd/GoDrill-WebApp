@@ -2,6 +2,10 @@
 
 ## A Project in GoLang.
 
+### Prerequisite programs
+- Golang
+- MySQL database
+
 ### How to execute this project?
 
 Clone this repo -
@@ -16,7 +20,11 @@ Install Dependencies -
 In your project directory run command -
 `go run main.go`
 
-To Test the project you can use POSTMAN 
-or 
-curl with GET/POST request
-at localhost:9090/users
+### How to test this project?
+
+Make a POST request to localhost:9090/users as - `curl localhost:9090/users -XPOST -d "<.csv filepath>"`
+Make a GET request to localhost:9090/ as - `curl localhost:9090/`
+
+OR
+
+Use [Postman](https://www.postman.com/downloads/) for testing.
