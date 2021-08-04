@@ -1,4 +1,4 @@
-package handlers
+package models
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ type User struct {
 }
 
 var userMap = make(map[uuid.UUID]User)
-var userList []User
+var UserList []User
 
 func AddUser(u *User, db *gorm.DB) (int64, error) {
 	// if u.UUID == uuid.Nil {

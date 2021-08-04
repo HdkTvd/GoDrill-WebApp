@@ -5,6 +5,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/godrill1/models"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
@@ -43,7 +44,7 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 		// 	continue
 		// }
 
-		user := &User{
+		user := &models.User{
 			UUID:        uid,
 			Name:        lines[1],
 			Email:       lines[2],
@@ -55,7 +56,7 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 		if err != nil {
 			l.Error("User details invalid:", err)
 		} else {
-			res, err := AddUser(user, db)
+			res, err := models.AddUser(user, db)
 			if err != nil {
 				l.Error(err)
 			} else {
