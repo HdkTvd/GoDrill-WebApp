@@ -22,8 +22,9 @@ In your project directory run command -
 
 ### How to test this project?
 
-Make a POST request to localhost:9090/users as - `curl localhost:9090/users -XPOST -d "<.csv filepath>"`
-Make a GET request to localhost:9090/ as - `curl localhost:9090/`
+Make a GET request to get list of all users by using cmd - `curl localhost:9090/GET/users`
+
+Make a POST request to add users from csv file by using cmd - `curl localhost:9090/POST/users -XPOST -d "<.csv filepath>"`
 
 OR
 
