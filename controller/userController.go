@@ -11,58 +11,32 @@ import (
 	"gorm.io/gorm"
 )
 
-type UserHandler struct {
-	l  *logrus.Logger
-	db *gorm.DB
+type UserController struct {
+	log *logrus.Logger
+	db  *gorm.DB
 }
 
-func NewUserHandler(l *logrus.Logger, db *gorm.DB) *UserHandler {
-	return &UserHandler{l, db}
+func NewUserController(log *logrus.Logger, db *gorm.DB) *UserController {
+	return &UserController{log, db}
 }
 
-func (uh *UserHandler) GetUsers(rw http.ResponseWriter, r *http.Request) {
-
-	if r.Method == http.MethodGet {
-		//fetch all users from usertable in sql database
-		uh.db.Find(&models.UserList)
-
-		//convert table into json
-		e := json.NewEncoder(rw)
-		err := e.Encode(models.UserList)
-		if err != nil {
-			uh.l.Error("Unable to convert to json")
-		}
-		uh.l.Info("Users Get request")
-		return
-	} else {
-		http.Error(rw, "Unable to fulfill request ", http.StatusBadRequest)
+func (uc *UserController) GetUsers(rw http.ResponseWriter, r *http.Request) {
+	uc.db.Find(&models.UserList)
+	e := json.NewEncoder(rw)
+	err := e.Encode(models.UserList)
+	if err != nil {
+		uc.log.Error("Unable to convert to json")
 	}
+	uc.log.Info("Users Get request")
+	return
 }
 
-func (uh *UserHandler) AddUsers(rw http.ResponseWriter, r *http.Request) {
-
-	if r.Method == http.MethodPost {
-		data, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			uh.l.Error("Unable to read POST data ", http.StatusBadRequest)
-			return
-		}
-		handlers.ReadCsv(string(data), uh.l, uh.db)
+func (uc *UserController) AddUsers(rw http.ResponseWriter, r *http.Request) {
+	data, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		uc.log.Error("Unable to read POST data ", http.StatusBadRequest)
 		return
-	} else {
-		uh.l.Error(rw, "Unable to fulfill request ", http.StatusBadRequest)
 	}
-
+	handlers.ReadCsvFile(string(data), uc.log, uc.db)
+	return
 }
-
-// func (uh *UserHandler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-// 	if r.Method == http.MethodGet {
-// 		uh.GetUsers(rw, r)
-// 		return
-// 	}
-
-// 	if r.Method == http.MethodPost {
-// 		uh.AddUsers(rw, r)
-// 		return
-// 	}
-// }

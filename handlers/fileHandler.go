@@ -11,38 +11,23 @@ import (
 	"gorm.io/gorm"
 )
 
-func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
-
+func ReadCsvFile(filePath string, log *logrus.Logger, db *gorm.DB) {
 	csvFile, err := os.Open(filePath)
 	if err != nil {
-		l.Error("Cannot open file.")
+		log.Error("Cannot open .csv file.")
 	}
 	defer csvFile.Close()
 
 	csvLines, err := csv.NewReader(csvFile).ReadAll()
 	if err != nil {
-		l.Error("Unable to read file.")
+		log.Error("Unable to read .csv file.")
 	}
 
 	for _, lines := range csvLines {
 
 		phNo, _ := strconv.Atoi(lines[3])
-		// if errPh != nil {
-		// 	l.Error("Unable to convert String type to Int type: ", err)
-		// 	continue
-		// }
-
 		isAct, _ := strconv.ParseBool(lines[4])
-		// if errAct != nil {
-		// 	l.Error("Unable to Parse bool: ", err)
-		// 	continue
-		// }
-
 		uid, _ := uuid.FromString(lines[0])
-		// if errId != nil {
-		// 	l.Error("Unable to convert UUID from string type: ", err)
-		// 	continue
-		// }
 
 		user := &models.User{
 			UUID:        uid,
@@ -52,18 +37,15 @@ func ReadCsv(filePath string, l *logrus.Logger, db *gorm.DB) {
 			IsActive:    isAct,
 		}
 
-		err := user.IsValid()
-		if err != nil {
-			l.Error("User details invalid:", err)
-		} else {
+		if user.IsValid(log) {
 			res, err := models.AddUser(user, db)
 			if err != nil {
-				l.Error(err)
+				log.Error(err)
 			} else {
-				l.Info("Rows Affected:", res)
+				log.Info("Rows Affected: ", res)
 			}
+		} else {
+			log.Error("Unable to create User with UUID " + user.UUID.String())
 		}
-
 	}
-
 }

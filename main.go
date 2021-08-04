@@ -6,34 +6,28 @@ import (
 	"time"
 
 	"github.com/godrill1/controller"
-	"github.com/godrill1/models"
+	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
+	//create a new logger
+	log := logrus.New()
+	log.SetOutput(os.Stdout)
 
-	//create logger
-	l := logrus.New()
-	l.SetOutput(os.Stdout)
+	//connect to MYSQL database
+	db := controller.ConnectToDB(log)
 
-	//create database connection
-	dsn := "user:passwords@tcp(127.0.0.1:3306)/dbase?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		l.Fatal("Error connecting database.")
-	}
-	db.AutoMigrate(&models.User{})
+	uh := controller.NewUserController(log, db)
+	sm := mux.NewRouter()
 
-	//create handler
-	uh := controller.NewUserHandler(l, db)
+	getRouter := sm.Methods(http.MethodGet).Subrouter()
+	getRouter.HandleFunc("/GET/users", uh.GetUsers)
 
-	//create a new server mux and register the handlers
-	sm := http.NewServeMux()
-	sm.HandleFunc("/users", uh.AddUsers)
-	sm.HandleFunc("/", uh.GetUsers)
+	postRouter := sm.Methods(http.MethodPost).Subrouter()
+	postRouter.HandleFunc("/POST/users", uh.AddUsers)
 
+	//create a new server
 	s := &http.Server{
 		Addr:         ":9090",
 		Handler:      sm,
@@ -41,5 +35,5 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	l.Fatal(s.ListenAndServe())
+	log.Fatal(s.ListenAndServe())
 }
