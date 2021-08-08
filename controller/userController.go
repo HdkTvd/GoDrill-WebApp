@@ -1,42 +1,45 @@
 package controller
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/godrill1/handlers"
-	"github.com/godrill1/models"
+	"github.com/godrill1/services"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
 type UserController struct {
+	sv  *services.ServiceImplementation
 	log *logrus.Logger
 	db  *gorm.DB
 }
 
-func NewUserController(log *logrus.Logger, db *gorm.DB) *UserController {
-	return &UserController{log, db}
+func NewUserController(sv *services.ServiceImplementation, log *logrus.Logger, db *gorm.DB) *UserController {
+	return &UserController{sv, log, db}
 }
 
-func (uc *UserController) GetUsers(rw http.ResponseWriter, r *http.Request) {
-	uc.db.Find(&models.UserList)
-	e := json.NewEncoder(rw)
-	err := e.Encode(models.UserList)
+func (uc *UserController) GetUsersController(rw http.ResponseWriter, r *http.Request) {
+
+	userList, err := uc.sv.GetUsers(uc.db)
 	if err != nil {
 		uc.log.Error("Unable to convert to json")
+		return
+	} else {
+		rw.Write(userList)
+		uc.log.Info("Users Get request")
 	}
-	uc.log.Info("Users Get request")
+
 	return
 }
 
-func (uc *UserController) AddUsers(rw http.ResponseWriter, r *http.Request) {
+func (uc *UserController) AddUsersController(rw http.ResponseWriter, r *http.Request) {
 	data, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		uc.log.Error("Unable to read POST data ", http.StatusBadRequest)
 		return
 	}
-	handlers.ReadCsvFile(string(data), uc.log, uc.db)
+	handlers.ReadCsvFile(string(data), uc.log, uc.db, uc.sv)
 	return
 }

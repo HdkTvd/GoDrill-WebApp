@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/godrill1/controller"
+	"github.com/godrill1/services"
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -18,14 +19,17 @@ func main() {
 	//connect to MYSQL database
 	db := controller.ConnectToDB(log)
 
-	uh := controller.NewUserController(log, db)
+	//Interface for services
+	var sv *services.ServiceImplementation
+
+	uh := controller.NewUserController(sv, log, db)
 	sm := mux.NewRouter()
 
 	getRouter := sm.Methods(http.MethodGet).Subrouter()
-	getRouter.HandleFunc("/GET/users", uh.GetUsers)
+	getRouter.HandleFunc("/GET/users", uh.GetUsersController)
 
 	postRouter := sm.Methods(http.MethodPost).Subrouter()
-	postRouter.HandleFunc("/POST/users", uh.AddUsers)
+	postRouter.HandleFunc("/POST/users", uh.AddUsersController)
 
 	//create a new server
 	s := &http.Server{

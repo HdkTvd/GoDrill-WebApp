@@ -10,7 +10,8 @@ import (
 const (
 	Username = "root"
 	Password = "Sequelp@ss"
-	Hostname = "127.0.0.1"
+	// Hostname = "host.docker.internal"
+	Hostname = "172.18.0.2"
 	Port     = "3306"
 	Schema   = "user_schema"
 )

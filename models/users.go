@@ -5,7 +5,6 @@ import (
 
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
-	"gorm.io/gorm"
 )
 
 type User struct {
@@ -14,16 +13,6 @@ type User struct {
 	Email       string    `json:"email" validate:"required"`
 	PhoneNumber int       `json:"phone_number"`
 	IsActive    bool      `json:"isActive"`
-}
-
-var UserList []User
-
-func AddUser(u *User, db *gorm.DB) (int64, error) {
-	result := db.Create(*u)
-	if result.Error != nil {
-		return 0, result.Error
-	}
-	return result.RowsAffected, nil
 }
 
 func (u *User) IsValid(log *logrus.Logger) bool {

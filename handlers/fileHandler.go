@@ -6,12 +6,13 @@ import (
 	"strconv"
 
 	"github.com/godrill1/models"
+	"github.com/godrill1/services"
 	uuid "github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
-func ReadCsvFile(filePath string, log *logrus.Logger, db *gorm.DB) {
+func ReadCsvFile(filePath string, log *logrus.Logger, db *gorm.DB, sv *services.ServiceImplementation) {
 	csvFile, err := os.Open(filePath)
 	if err != nil {
 		log.Error("Cannot open .csv file.")
@@ -38,7 +39,7 @@ func ReadCsvFile(filePath string, log *logrus.Logger, db *gorm.DB) {
 		}
 
 		if user.IsValid(log) {
-			res, err := models.AddUser(user, db)
+			res, err := sv.AddUser(user, db)
 			if err != nil {
 				log.Error(err)
 			} else {
